@@ -28,13 +28,13 @@ class Container implements \MageSuite\Queue\Api\ContainerInterface
 
     public function setData($data)
     {
-        $this->data = json_encode($data);
+        $this->data = $data;
 
         return $this;
     }
 
     public function getData()
     {
-        return json_decode($this->data, true);
+        return $this->data;
     }
 }
