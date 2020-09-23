@@ -16,13 +16,13 @@ interface ContainerInterface
     public function getHandler();
 
     /**
-     * @param mixed $data
+     * @param string $data
      * @return $this
      */
     public function setData($data);
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getData();
 }

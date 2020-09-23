@@ -18,6 +18,11 @@ class Publisher
     protected $container;
 
     /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    protected $serializer;
+
+    /**
      * @var \Magento\Framework\App\DeploymentConfig
      */
     protected $deploymentConfig;
@@ -25,15 +30,20 @@ class Publisher
     public function __construct(
         \Magento\Framework\MessageQueue\PublisherInterface $publisher,
         \MageSuite\Queue\Api\ContainerInterface $container,
+        \Magento\Framework\Serialize\SerializerInterface $serializer,
         \Magento\Framework\App\DeploymentConfig $deploymentConfig
     ) {
         $this->publisher = $publisher;
         $this->container = $container;
+        $this->serializer = $serializer;
         $this->deploymentConfig = $deploymentConfig;
     }
 
     public function publish($handler, $data)
     {
+        //We need to serialize date to ensure Magento will not change the data structure
+        $data = $this->serializer->serialize($data);
+
         $this->container
             ->setHandler($handler)
             ->setData($data);

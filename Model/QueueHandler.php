@@ -10,11 +10,16 @@ class QueueHandler implements \MageSuite\Queue\Api\QueueHandlerInterface
     protected $objectManager;
 
     /**
-     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @var \Magento\Framework\Serialize\SerializerInterface
      */
-    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
-    {
+    protected $serializer;
+
+    public function __construct(
+        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Framework\Serialize\SerializerInterface $serializer
+    ) {
         $this->objectManager = $objectManager;
+        $this->serializer = $serializer;
     }
 
     public function execute(\MageSuite\Queue\Api\ContainerInterface $container)
@@ -25,6 +30,7 @@ class QueueHandler implements \MageSuite\Queue\Api\QueueHandlerInterface
             return;
         }
 
-        $handler->execute($container->getData());
+        $data = $this->serializer->unserialize($container->getData());
+        $handler->execute($data);
     }
 }
