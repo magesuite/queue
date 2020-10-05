@@ -1,0 +1,4 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Communication/etc/communication.xsd">
+    <topic name="magesuite.consumer.db" request="MageSuite\Queue\Api\ContainerInterface" />
+    <topic name="magesuite.consumer.amqp" request="MageSuite\Queue\Api\ContainerInterface" />
+</config>
