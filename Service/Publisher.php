@@ -55,7 +55,7 @@ class Publisher
     {
         $queueConfig = $this->deploymentConfig->getConfigData(\Magento\Framework\Amqp\Config::QUEUE_CONFIG);
 
-        if (empty($queueConfig)) {
+        if (empty($queueConfig) || !isset($queueConfig[\Magento\Framework\Amqp\Config::AMQP_CONFIG])) {
             return self::DATABASE_CONSUMER_NAME;
         }
 
