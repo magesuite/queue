@@ -3,7 +3,7 @@
         <queue name="magesuite.consumer.db" consumer="magesuite.consumer.db" consumerInstance="Magento\Framework\MessageQueue\Consumer" handler="MageSuite\Queue\Model\QueueHandler::execute" />
     </broker>
 
-    <broker topic="magesuite.consumer.amqp" type="amqp" exchange="magento">
+    <broker topic="magesuite.consumer.amqp" type="amqp" exchange="magesuite.amqp">
         <queue name="magesuite.consumer.amqp" consumer="magesuite.consumer.amqp" consumerInstance="Magento\Framework\MessageQueue\Consumer" handler="MageSuite\Queue\Model\QueueHandler::execute" />
     </broker>
 </config>
