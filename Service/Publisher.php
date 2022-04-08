@@ -1,45 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\Queue\Service;
 
 class Publisher
 {
-    const AMQP_CONSUMER_NAME = 'magesuite.consumer.amqp';
-    const DATABASE_CONSUMER_NAME = 'magesuite.consumer.db';
+    public const AMQP_CONSUMER_NAME = 'magesuite.consumer.amqp';
+    public const DATABASE_CONSUMER_NAME = 'magesuite.consumer.db';
 
-    /**
-     * @var \Magento\Framework\MessageQueue\PublisherInterface
-     */
-    protected $publisher;
-
-    /**
-     * @var \MageSuite\Queue\Api\ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * @var \Magento\Framework\Serialize\SerializerInterface
-     */
-    protected $serializer;
-
-    /**
-     * @var \Magento\Framework\App\DeploymentConfig
-     */
-    protected $deploymentConfig;
+    protected \MageSuite\Queue\Api\ContainerInterface $container;
+    protected \Magento\Framework\App\DeploymentConfig $deploymentConfig;
+    protected \Magento\Framework\Event\ManagerInterface $eventManager;
+    protected \Magento\Framework\MessageQueue\PublisherInterface $publisher;
+    protected \Magento\Framework\Serialize\SerializerInterface $serializer;
 
     public function __construct(
-        \Magento\Framework\MessageQueue\PublisherInterface $publisher,
         \MageSuite\Queue\Api\ContainerInterface $container,
-        \Magento\Framework\Serialize\SerializerInterface $serializer,
-        \Magento\Framework\App\DeploymentConfig $deploymentConfig
+        \Magento\Framework\App\DeploymentConfig $deploymentConfig,
+        \Magento\Framework\Event\ManagerInterface $eventManager,
+        \Magento\Framework\MessageQueue\PublisherInterface $publisher,
+        \Magento\Framework\Serialize\SerializerInterface $serializer
     ) {
-        $this->publisher = $publisher;
         $this->container = $container;
-        $this->serializer = $serializer;
         $this->deploymentConfig = $deploymentConfig;
+        $this->eventManager = $eventManager;
+        $this->publisher = $publisher;
+        $this->serializer = $serializer;
     }
 
-    public function publish($handler, $data)
+    /**
+     * @param string $handler
+     * @param mixed $data
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Magento\Framework\Exception\RuntimeException
+     */
+    public function publish(string $handler, $data)
     {
         //We need to serialize date to ensure Magento will not change the data structure
         $data = $this->serializer->serialize($data);
@@ -48,10 +44,22 @@ class Publisher
             ->setHandler($handler)
             ->setData($data);
 
+        $eventConsumerName = str_replace('.', '_', $this->getConsumerName());
+        $eventName = sprintf('%s_before_publish', $eventConsumerName);
+        $this->eventManager->dispatch($eventName, ['container' => $this->container]);
+
         $this->publisher->publish($this->getConsumerName(), $this->container);
+
+        $eventName = sprintf('%s_after_publish', $eventConsumerName);
+        $this->eventManager->dispatch($eventName, ['container' => $this->container]);
     }
 
-    protected function getConsumerName()
+    /**
+     * @return string
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Magento\Framework\Exception\RuntimeException
+     */
+    protected function getConsumerName(): string
     {
         $queueConfig = $this->deploymentConfig->getConfigData(\Magento\Framework\Amqp\Config::QUEUE_CONFIG);
 

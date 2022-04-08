@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="MageSuite_Queue::queue_logs" title="MageSuite Queue Logger" translate="title"
+             module="MageSuite_Queue"
+             sortOrder="55" parent="Magento_Backend::system_convert" action="queue/log/index"
+             resource="MageSuite_Queue::config_queue"/>
+    </menu>
+</config>

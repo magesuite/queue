@@ -2,4 +2,45 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="MageSuite\Queue\Api\ContainerInterface" type="MageSuite\Queue\Model\Container" />
     <preference for="MageSuite\Queue\Api\HandlerInterface" type="MageSuite\Queue\Model\Handler" />
+
+    <virtualType name="MageSuite\Queue\Model\ResourceModel\Grid\QueueLogDataProvider"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">queue_logs</argument>
+            <argument name="resourceModel" xsi:type="string">MageSuite\Queue\Model\ResourceModel\QueueLog</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="queue_log_listing_data_source" xsi:type="string">MageSuite\Queue\Model\ResourceModel\Grid\QueueLogDataProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="MageSuite\Queue\Model\Config\Source\LogTypes">
+        <arguments>
+            <argument name="options" xsi:type="const">MageSuite\Queue\Service\Logger::EVENTS</argument>
+        </arguments>
+    </type>
+    <type name="MageSuite\Queue\Model\Resolver\QueueLogTypeResolver">
+        <arguments>
+            <argument name="configuration" xsi:type="array">
+                <item name="exception" xsi:type="string">logException</item>
+                <item name="publish" xsi:type="array">
+                    <item name="method_name" xsi:type="string">logMessage</item>
+                    <item name="params" xsi:type="array">
+                        <item name="eventName" xsi:type="string">eventName</item>
+                        <item name="event" xsi:type="string">event</item>
+                    </item>
+                </item>
+                <item name="failed" xsi:type="string">logHandleNotExecute</item>
+                <item name="before" xsi:type="string">logHandleBeforeExecute</item>
+                <item name="after" xsi:type="string">logHandleAfterExecute</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\MysqlMq\Model\ResourceModel\Queue">
+        <plugin name="log_published_message_id" type="MageSuite\Queue\Plugin\MysqlMq\Model\ResourceModel\Queue\LogPublishedMessageId" />
+    </type>
 </config>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="magesuite_consumer_amqp_before_publish">
+        <observer name="legacy_model_save" instance="MageSuite\Queue\Observer\LogEventDataToDb" />
+    </event>
+    <event name="magesuite_consumer_db_before_publish">
+        <observer name="legacy_model_save" instance="MageSuite\Queue\Observer\LogEventDataToDb" />
+    </event>
+    <event name="magesuite_consumer_amqp_after_publish">
+        <observer name="legacy_model_save" instance="MageSuite\Queue\Observer\LogEventDataToDb" />
+    </event>
+    <event name="magesuite_consumer_db_after_publish">
+        <observer name="legacy_model_save" instance="MageSuite\Queue\Observer\LogEventDataToDb" />
+    </event>
+    <event name="magesuite_queue_handler_execute_before">
+        <observer name="legacy_model_save" instance="MageSuite\Queue\Observer\LogEventDataToDb" />
+    </event>
+    <event name="magesuite_queue_handler_execute_failed">
+        <observer name="legacy_model_save" instance="MageSuite\Queue\Observer\LogEventDataToDb" />
+    </event>
+    <event name="magesuite_queue_handler_execute_exception">
+        <observer name="legacy_model_save" instance="MageSuite\Queue\Observer\LogEventDataToDb" />
+    </event>
+    <event name="magesuite_queue_handler_execute_after">
+        <observer name="legacy_model_save" instance="MageSuite\Queue\Observer\LogEventDataToDb" />
+    </event>
+</config>
