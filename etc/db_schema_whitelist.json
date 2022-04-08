@@ -1,0 +1,13 @@
+{
+    "queue_logs": {
+        "column": {
+            "log_id": true,
+            "type": true,
+            "message_id": true,
+            "log": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
