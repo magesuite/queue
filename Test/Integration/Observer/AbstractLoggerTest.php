@@ -12,6 +12,7 @@ abstract class AbstractLoggerTest extends \PHPUnit\Framework\TestCase
     protected ?\MageSuite\Queue\Model\Resolver\QueueLogTypeResolver $queueLogTypeResolver;
     protected ?\Magento\Framework\App\ResourceConnection $resourceConnection;
     protected ?\Magento\Framework\Serialize\SerializerInterface $serializer;
+    protected ?\MageSuite\Queue\Service\Logger $loggerServiceStub = null;
 
     protected function setUp(): void
     {
