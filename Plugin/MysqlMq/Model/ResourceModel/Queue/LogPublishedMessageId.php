@@ -12,41 +12,27 @@ class LogPublishedMessageId
     {
         $this->loggerService = $loggerService;
     }
-
-    /**
-     * @param \Magento\MysqlMq\Model\ResourceModel\Queue $subject
-     * @param string $result
-     * @param string $messageTopic
-     * @param string $messageBody
-     * @return string
-     */
+    
     public function afterSaveMessage(
         \Magento\MysqlMq\Model\ResourceModel\Queue $subject,
         string $messageId,
         string $messageTopic,
         string $messageBody
     ): ?string {
-        if ($messageTopic == 'magesuite.consumer.db' && !empty($messageId)) {
+        if ($messageTopic == \MageSuite\Queue\Service\Publisher::CONSUMER_NAME && !empty($messageId)) {
             $this->loggerService->logSavedMessage((int) $messageId, $messageBody);
         }
 
         return $messageId;
     }
-
-    /**
-     * @param \Magento\MysqlMq\Model\ResourceModel\Queue $subject
-     * @param string $result
-     * @param string $messageTopic
-     * @param string $messageBody
-     * @return array
-     */
+    
     public function afterSaveMessages(
         \Magento\MysqlMq\Model\ResourceModel\Queue $subject,
         array $messageIds,
         string $messageTopic,
         array $messageBody
     ): ?array {
-        if ($messageTopic == 'magesuite.consumer.db' && !empty($messageIds)) {
+        if ($messageTopic == \MageSuite\Queue\Service\Publisher::CONSUMER_NAME && !empty($messageIds)) {
             $this->loggerService->logSavedMessages($messageIds);
         }
 
