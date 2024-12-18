@@ -6,8 +6,7 @@ namespace MageSuite\Queue\Service;
 
 class Publisher
 {
-    public const AMQP_CONSUMER_NAME = 'magesuite.consumer.amqp';
-    public const DATABASE_CONSUMER_NAME = 'magesuite.consumer.db';
+    public const CONSUMER_NAME = 'magesuite.consumer';
 
     protected \MageSuite\Queue\Api\ContainerInterface $container;
     protected \Magento\Framework\App\DeploymentConfig $deploymentConfig;
@@ -53,20 +52,9 @@ class Publisher
         $eventName = sprintf('%s_after_publish', $eventConsumerName);
         $this->eventManager->dispatch($eventName, ['container' => $this->container]);
     }
-
-    /**
-     * @return string
-     * @throws \Magento\Framework\Exception\FileSystemException
-     * @throws \Magento\Framework\Exception\RuntimeException
-     */
+    
     protected function getConsumerName(): string
     {
-        $queueConfig = $this->deploymentConfig->getConfigData(\Magento\Framework\Amqp\Config::QUEUE_CONFIG);
-
-        if (empty($queueConfig) || !isset($queueConfig[\Magento\Framework\Amqp\Config::AMQP_CONFIG])) {
-            return self::DATABASE_CONSUMER_NAME;
-        }
-
-        return self::AMQP_CONSUMER_NAME;
+        return self::CONSUMER_NAME;
     }
 }
