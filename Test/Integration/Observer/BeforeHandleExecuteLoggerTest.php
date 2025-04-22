@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MageSuite\Queue\Test\Integration\Observer;
 
-class BeforeHandleExecuteLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\AbstractLoggerTest
+class BeforeHandleExecuteLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\AbstractLoggerTestCase
 {
     protected const EVENT_TYPE = 'before';
     protected const LOGGER_METHOD = 'logHandleBeforeExecute';

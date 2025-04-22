@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MageSuite\Queue\Test\Integration\Observer;
 
-class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\AbstractLoggerTest
+class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\AbstractLoggerTestCase
 {
     /**
      * @magentoDbIsolation enabled
