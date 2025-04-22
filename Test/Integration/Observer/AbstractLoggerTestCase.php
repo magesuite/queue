@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MageSuite\Queue\Test\Integration\Observer;
 
-abstract class AbstractLoggerTest extends \PHPUnit\Framework\TestCase
+abstract class AbstractLoggerTestCase extends \PHPUnit\Framework\TestCase
 {
     protected ?\Magento\Framework\Event\ManagerInterface $eventManager;
     protected ?\Magento\Framework\ObjectManagerInterface $objectManager;

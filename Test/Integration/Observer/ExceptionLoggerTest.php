@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MageSuite\Queue\Test\Integration\Observer;
 
-class ExceptionLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\AbstractLoggerTest
+class ExceptionLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\AbstractLoggerTestCase
 {
     protected const EVENT_TYPE = 'exception';
     protected const LOGGER_METHOD = 'logException';
