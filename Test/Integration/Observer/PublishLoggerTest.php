@@ -9,9 +9,11 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
+     * @param string $event
+     * @param $container
      * @dataProvider getTestCases
      */
-    public function testLogMessageMethodCall(string $event, \MageSuite\Queue\Api\ContainerInterface $container): void
+    public function testLogMessageMethodCall(string $event, $container)
     {
         $this->setLoggerServiceStub();
 
@@ -31,11 +33,14 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
+     * @param string $event
+     * @param $container
      * @dataProvider getTestCasesForDb
      * @magentoConfigFixture current_store queues/general/is_logger_enabled 1
      * @magentoConfigFixture current_store queues/general/log_types publish_message
+     * @throws \Exception
      */
-    public function testInsertingLogMessageToDb(string $event, \MageSuite\Queue\Api\ContainerInterface $container): void
+    public function testInsertingLogMessageToDb(string $event, $container)
     {
         $this->eventManager->dispatch($event, ['container' => [$container]]);
 
@@ -50,8 +55,9 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
      * @magentoAppIsolation enabled
      * @magentoConfigFixture current_store queues/general/is_logger_enabled 1
      * @magentoConfigFixture current_store queues/general/log_types publish_message
+     * @throws \Exception
      */
-    public function testInsertingPluginLogMessageToDb(): void
+    public function testInsertingPluginLogMessageToDb()
     {
         $publisher = $this->objectManager->create(\MageSuite\Queue\Service\Publisher::class);
         $publisher->publish(\MageSuite\Queue\Test\Integration\Fixtures\ConsumerHandler::class, 'Message');
@@ -63,9 +69,12 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
         );
     }
 
-    public static function getTestCases(): array
+    /**
+     * @return array[]
+     */
+    public function getTestCases()
     {
-        $container = self::getContainer();
+        $container = $this->getContainer();
 
         return [
             [
@@ -87,9 +96,12 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
         ];
     }
 
-    public static function getTestCasesForDb(): array
+    /**
+     * @return array[]
+     */
+    public function getTestCasesForDb()
     {
-        $container = self::getContainer();
+        $container = $this->getContainer();
 
         return [
             [

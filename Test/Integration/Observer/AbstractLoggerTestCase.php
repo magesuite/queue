@@ -33,7 +33,26 @@ abstract class AbstractLoggerTestCase extends \PHPUnit\Framework\TestCase
         $this->assertIsArray($this->queueLogTypeResolver->getConfiguration());
     }
 
-    protected function getContainerWithSerializedData(string $handler, string $data = 'Test Data'): \MageSuite\Queue\Api\ContainerInterface
+    /**
+     * @return \MageSuite\Queue\Api\ContainerInterface
+     */
+    protected function getContainer(): \MageSuite\Queue\Api\ContainerInterface
+    {
+        $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
+        $container = $objectManager->create(\MageSuite\Queue\Api\ContainerInterface::class);
+        $container
+            ->setHandler(\MageSuite\Queue\Test\Integration\Fixtures\ConsumerHandler::class)
+            ->setData('Test Data');
+
+        return $container;
+    }
+
+    /**
+     * @param string $handler
+     * @param string $data
+     * @return \MageSuite\Queue\Api\ContainerInterface
+     */
+    protected function getContainerWithSerializedData(string $handler, $data = 'Test Data'): \MageSuite\Queue\Api\ContainerInterface
     {
         $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $container = $objectManager->create(\MageSuite\Queue\Api\ContainerInterface::class);
@@ -59,7 +78,12 @@ abstract class AbstractLoggerTestCase extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function callEvent(string $event, \MageSuite\Queue\Api\ContainerInterface $container): void
+    /**
+     * @param string $event
+     * @param $container
+     * @throws \Magento\Framework\Exception\InvalidArgumentException
+     */
+    protected function callEvent(string $event, $container): void
     {
         $methodName = $this->queueLogTypeResolver->getConfigurationByEventType(static::EVENT_TYPE);
         $this->loggerServiceStub->expects($this->once())->method($methodName);
@@ -71,6 +95,10 @@ abstract class AbstractLoggerTestCase extends \PHPUnit\Framework\TestCase
         $this->assertEquals($methodName, static::LOGGER_METHOD, $message);
     }
 
+    /**
+     * @param string $string
+     * @param string $message
+     */
     protected function isLogContained(string $string, string $message, ?bool $messageId = null): void
     {
         $adapter = $this->resourceConnection->getConnection();
@@ -92,16 +120,4 @@ abstract class AbstractLoggerTestCase extends \PHPUnit\Framework\TestCase
             $message
         );
     }
-
-    protected static function getContainer(): \MageSuite\Queue\Api\ContainerInterface
-    {
-        $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
-        $container = $objectManager->create(\MageSuite\Queue\Api\ContainerInterface::class);
-        $container
-            ->setHandler(\MageSuite\Queue\Test\Integration\Fixtures\ConsumerHandler::class)
-            ->setData('Test Data');
-
-        return $container;
-    }
-
 }
