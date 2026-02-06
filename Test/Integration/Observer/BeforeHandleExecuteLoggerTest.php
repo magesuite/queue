@@ -12,12 +12,12 @@ class BeforeHandleExecuteLoggerTest extends \MageSuite\Queue\Test\Integration\Ob
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     * @param string $event
-     * @param $container
-     * @dataProvider getTestCases
      */
-    public function testLogHandleNotExecuteMethodCall(string $event, $container)
+    public function testLogHandleNotExecuteMethodCall(): void
     {
+        $event = 'magesuite_queue_handler_execute_before';
+        $container = $this->getContainer();
+
         $this->setLoggerServiceStub();
         $this->callEvent($event, $container);
     }
@@ -27,13 +27,10 @@ class BeforeHandleExecuteLoggerTest extends \MageSuite\Queue\Test\Integration\Ob
      * @magentoAppIsolation enabled
      * @magentoConfigFixture current_store queues/general/is_logger_enabled 1
      * @magentoConfigFixture current_store queues/general/log_types before_handle_execute
-     * @throws \Exception
      */
-    public function testInsertingLogMessageToDb()
+    public function testInsertingLogMessageToDb(): void
     {
-        $container = $this->getContainerWithSerializedData(
-            \MageSuite\Queue\Test\Integration\Fixtures\ConsumerHandler::class
-        );
+        $container = $this->getContainerWithSerializedData(\MageSuite\Queue\Test\Integration\Fixtures\ConsumerHandler::class);
 
         $this->queueHandler->execute($container);
 
@@ -41,19 +38,5 @@ class BeforeHandleExecuteLoggerTest extends \MageSuite\Queue\Test\Integration\Ob
             \MageSuite\Queue\Service\Logger::EVENT_BEFORE_HANDLE_EXECUTE,
             'Before handle execute a message has been not added to queue log'
         );
-    }
-
-    /**
-     * @return array[]
-     */
-    public function getTestCases()
-    {
-        return [
-            [
-                'event' => 'magesuite_queue_handler_execute_before',
-                'container' => $this->getContainer(),
-                'expects' => 1,
-            ],
-        ];
     }
 }
