@@ -12,12 +12,12 @@ class FailedHandleExecuteLoggerTest extends \MageSuite\Queue\Test\Integration\Ob
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     * @param string $event
-     * @param $container
-     * @dataProvider getTestCases
      */
-    public function testLogHandleNotExecuteMethodCall(string $event, $container)
+    public function testLogHandleNotExecuteMethodCall(): void
     {
+        $event = 'magesuite_queue_handler_execute_failed';
+        $container = $this->getContainer();
+
         $this->setLoggerServiceStub();
         $this->callEvent($event, $container);
     }
@@ -27,13 +27,10 @@ class FailedHandleExecuteLoggerTest extends \MageSuite\Queue\Test\Integration\Ob
      * @magentoAppIsolation enabled
      * @magentoConfigFixture current_store queues/general/is_logger_enabled 1
      * @magentoConfigFixture current_store queues/general/log_types failed_handle_execute
-     * @throws \Exception
      */
-    public function testInsertingLogMessageToDb()
+    public function testInsertingLogMessageToDb(): void
     {
-        $container = $this->getContainerWithSerializedData(
-            \MageSuite\Queue\Test\Integration\Fixtures\FailedConsumerHandler::class
-        );
+        $container = $this->getContainerWithSerializedData(\MageSuite\Queue\Test\Integration\Fixtures\FailedConsumerHandler::class);
 
         $this->queueHandler->execute($container);
 
@@ -41,19 +38,5 @@ class FailedHandleExecuteLoggerTest extends \MageSuite\Queue\Test\Integration\Ob
             \MageSuite\Queue\Service\Logger::EVENT_FAILED_HANDLE_EXECUTE,
             'Failed handle execute a message has been not added to queue log'
         );
-    }
-
-    /**
-     * @return array[]
-     */
-    public function getTestCases()
-    {
-        return [
-            [
-                'event' => 'magesuite_queue_handler_execute_failed',
-                'container' => $this->getContainer(),
-                'expects' => 1,
-            ],
-        ];
     }
 }

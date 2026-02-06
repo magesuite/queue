@@ -12,12 +12,12 @@ class ExceptionLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abs
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     * @param string $event
-     * @param $container
-     * @dataProvider getTestCases
      */
-    public function testLogExceptionMethodCall(string $event, $container)
+    public function testLogExceptionMethodCall(): void
     {
+        $event = 'magesuite_queue_handler_execute_exception';
+        $container = $this->getContainer();
+
         $this->setLoggerServiceStub();
         $this->callEvent($event, $container);
     }
@@ -27,13 +27,10 @@ class ExceptionLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abs
      * @magentoAppIsolation enabled
      * @magentoConfigFixture current_store queues/general/is_logger_enabled 1
      * @magentoConfigFixture current_store queues/general/log_types exception
-     * @throws \Exception
      */
-    public function testInsertingLogMessageToDb()
+    public function testInsertingLogMessageToDb(): void
     {
-        $container = $this->getContainerWithSerializedData(
-            \MageSuite\Queue\Test\Integration\Fixtures\ConsumerHandlerWithException::class
-        );
+        $container = $this->getContainerWithSerializedData(\MageSuite\Queue\Test\Integration\Fixtures\ConsumerHandlerWithException::class);
 
         try {
             $this->queueHandler->execute($container);
@@ -50,19 +47,5 @@ class ExceptionLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abs
                 'Exception message has been not added to queue log'
             );
         }
-    }
-
-    /**
-     * @return array[]
-     */
-    public function getTestCases()
-    {
-        return [
-            [
-                'event' => 'magesuite_queue_handler_execute_exception',
-                'container' => $this->getContainer(),
-                'expects' => 1,
-            ],
-        ];
     }
 }

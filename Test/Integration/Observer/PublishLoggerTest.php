@@ -9,12 +9,11 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     * @param string $event
-     * @param $container
      * @dataProvider getTestCases
      */
-    public function testLogMessageMethodCall(string $event, $container)
+    public function testLogMessageMethodCall(string $event): void
     {
+        $container = $this->getContainer();
         $this->setLoggerServiceStub();
 
         $config = $this->queueLogTypeResolver->getConfigurationByEventType('publish');
@@ -33,15 +32,13 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     * @param string $event
-     * @param $container
      * @dataProvider getTestCasesForDb
      * @magentoConfigFixture current_store queues/general/is_logger_enabled 1
      * @magentoConfigFixture current_store queues/general/log_types publish_message
-     * @throws \Exception
      */
-    public function testInsertingLogMessageToDb(string $event, $container)
+    public function testInsertingLogMessageToDb(string $event): void
     {
+        $container = $this->getContainer();
         $this->eventManager->dispatch($event, ['container' => [$container]]);
 
         $this->isLogContained(
@@ -55,9 +52,8 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
      * @magentoAppIsolation enabled
      * @magentoConfigFixture current_store queues/general/is_logger_enabled 1
      * @magentoConfigFixture current_store queues/general/log_types publish_message
-     * @throws \Exception
      */
-    public function testInsertingPluginLogMessageToDb()
+    public function testInsertingPluginLogMessageToDb(): void
     {
         $publisher = $this->objectManager->create(\MageSuite\Queue\Service\Publisher::class);
         $publisher->publish(\MageSuite\Queue\Test\Integration\Fixtures\ConsumerHandler::class, 'Message');
@@ -69,49 +65,21 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
         );
     }
 
-    /**
-     * @return array[]
-     */
-    public function getTestCases()
+    public static function getTestCases(): array
     {
-        $container = $this->getContainer();
-
         return [
-            [
-                'event' => 'magesuite_consumer_amqp_before_publish',
-                'container' => $container,
-            ],
-            [
-                'event' => 'magesuite_consumer_db_before_publish',
-                'container' => $container,
-            ],
-            [
-                'event' => 'magesuite_consumer_amqp_after_publish',
-                'container' => $container,
-            ],
-            [
-                'event' => 'magesuite_consumer_db_after_publish',
-                'container' => $container,
-            ],
+            ['event' => 'magesuite_consumer_amqp_before_publish'],
+            ['event' => 'magesuite_consumer_db_before_publish'],
+            ['event' => 'magesuite_consumer_amqp_after_publish'],
+            ['event' => 'magesuite_consumer_db_after_publish']
         ];
     }
 
-    /**
-     * @return array[]
-     */
-    public function getTestCasesForDb()
+    public static function getTestCasesForDb(): array
     {
-        $container = $this->getContainer();
-
         return [
-            [
-                'event' => 'magesuite_consumer_db_before_publish',
-                'container' => $container,
-            ],
-            [
-                'event' => 'magesuite_consumer_db_after_publish',
-                'container' => $container,
-            ],
+            ['event' => 'magesuite_consumer_db_before_publish'],
+            ['event' => 'magesuite_consumer_db_after_publish']
         ];
     }
 }
