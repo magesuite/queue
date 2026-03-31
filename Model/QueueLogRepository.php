@@ -6,16 +6,10 @@ namespace MageSuite\Queue\Model;
 
 class QueueLogRepository
 {
-    protected $queueLogFactory;
-    protected $queueLogResourceModel;
-
     public function __construct(
-        \MageSuite\Queue\Model\QueueLogFactory $queueLogFactory,
-        \MageSuite\Queue\Model\ResourceModel\QueueLog $queueLogResourceModel
-    ) {
-        $this->queueLogFactory = $queueLogFactory;
-        $this->queueLogResourceModel = $queueLogResourceModel;
-    }
+        protected \MageSuite\Queue\Model\QueueLogFactory $queueLogFactory,
+        protected \MageSuite\Queue\Model\ResourceModel\QueueLog $queueLogResourceModel
+    ) {}
 
     /**
      * @return \MageSuite\Queue\Model\QueueLog
@@ -35,20 +29,6 @@ class QueueLogRepository
         }
 
         return $this->save($queueLog);
-    }
-
-    /**
-     * @param array $messageIds
-     * @return array
-     */
-    public function getMessagesserializeLogDataFromDb(array $messageIds): array
-    {
-        $adapter = $this->queueLogResourceModel->getConnection();
-
-        $select = $adapter->select()->from($adapter->getTableName('queue_message'))
-            ->where('id in ?', $messageIds);
-
-        return $adapter->fetchAll($select);
     }
 
     /**
