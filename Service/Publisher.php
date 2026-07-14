@@ -52,7 +52,7 @@ class Publisher
         $eventName = sprintf('%s_after_publish', $eventConsumerName);
         $this->eventManager->dispatch($eventName, ['container' => $this->container]);
     }
-    
+
     protected function getConsumerName(): string
     {
         return self::CONSUMER_NAME;

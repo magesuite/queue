@@ -12,7 +12,7 @@ class LogPublishedMessageId
     {
         $this->loggerService = $loggerService;
     }
-    
+
     public function afterSaveMessage(
         \Magento\MysqlMq\Model\ResourceModel\Queue $subject,
         string $messageId,
@@ -25,7 +25,7 @@ class LogPublishedMessageId
 
         return $messageId;
     }
-    
+
     public function afterSaveMessages(
         \Magento\MysqlMq\Model\ResourceModel\Queue $subject,
         array $messageIds,
