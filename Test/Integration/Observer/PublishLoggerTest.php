@@ -9,8 +9,8 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     * @dataProvider getTestCases
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTestCases')]
     public function testLogMessageMethodCall(string $event): void
     {
         $container = $this->getContainer();
@@ -32,10 +32,10 @@ class PublishLoggerTest extends \MageSuite\Queue\Test\Integration\Observer\Abstr
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     * @dataProvider getTestCasesForDb
      * @magentoConfigFixture current_store queues/general/is_logger_enabled 1
      * @magentoConfigFixture current_store queues/general/log_types publish_message
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getTestCasesForDb')]
     public function testInsertingLogMessageToDb(string $event): void
     {
         $container = $this->getContainer();
